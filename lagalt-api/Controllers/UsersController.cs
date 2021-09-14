@@ -10,10 +10,11 @@ using lagalt_api.Models.DTOs;
 using lagalt_api.Models.DTOs.ProjectUsersDTOs;
 using lagalt_api.Models.Domain;
 using System.Linq;
+using lagalt_api.Models.DTOs.UserDTOs;
 
 namespace lagalt_api.Controllers
 {
-    [Route("api/v1/users")]
+    [Route("users")]
     [ApiController]
     [Produces(MediaTypeNames.Application.Json)]
     [Consumes(MediaTypeNames.Application.Json)]
@@ -71,10 +72,12 @@ namespace lagalt_api.Controllers
         /// </summary>
         /// <param name="id">User Id</param>
         /// <returns></returns>
-        [HttpGet("/{id}/projects")]
+        [HttpGet("projects/{id}")]
         public async Task<ActionResult<ProjectUsersReadDTO>> GetProjectsByUserId(string id)
         {
-            User UserObj = await _context.Users.Include(u => u.ContributedProjects).Where(f => f.UserId == id)
+            User UserObj = await _context.Users
+                .Include(u => u.ContributedProjects)
+                .Where(u => u.UserId == id)
                 .FirstAsync();
 
             if (UserObj == null)
@@ -83,6 +86,21 @@ namespace lagalt_api.Controllers
             }
 
             return _mapper.Map<ProjectUsersReadDTO>(UserObj);
+        }
+
+        /// <summary>
+        /// Add user to the databas
+        /// </summary>
+        /// <param name="userDto">data for the user</param>
+        /// <returns></returns>
+        [HttpPost]
+        public async Task<ActionResult<User>> AddUser(UserCreateDTO userDto)
+        {
+            User user = _mapper.Map<User>(userDto);
+            _context.Users.Add(user);
+            await _context.SaveChangesAsync();
+
+            return CreatedAtAction("GetUserById", new { id = user.UserId }, _mapper.Map<UserCreateDTO>(user));
         }
     }
 }

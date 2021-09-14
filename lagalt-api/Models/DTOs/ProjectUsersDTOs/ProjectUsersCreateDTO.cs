@@ -5,8 +5,9 @@ using System.Threading.Tasks;
 
 namespace lagalt_api.Models.DTOs.ProjectUsersDTOs
 {
-    public class ProjectUsersReadDTO
+    public class ProjectUsersCreateDTO
     {
-        public List<string> ContributedProjects { get; set; }
+        public int ProjectId { get; set; }
+        public int UserId { get; set; }
     }
 }
