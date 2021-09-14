@@ -8,6 +8,6 @@ namespace lagalt_api.Models.DTOs.FieldDTOs
 {
     public class FieldReadDTO
     {
-        public string Fields { get; set; }
+        public string FieldName { get; set; }
     }
 }
