@@ -4,7 +4,7 @@ on:
   push:
     branches:
       - master
-# A comment
+
 env:
   DOTNET_VERSION: "5.0.x"
   AZURE_WEBAPP_NAME: lagaltapibackend
@@ -26,9 +26,6 @@ jobs:
 
       - name: Build app
         run: dotnet build -c Release --no-restore
-
-      - name: Run automated tests
-        run: dotnet test -c Release --no-build
 
       - name: Publish app
         run: dotnet publish -c Release -o ./out
