@@ -21,7 +21,7 @@ jobs:
         with:
           dotnet-version: ${{ env.DOTNET_VERSION }}
 
-      - name: Restore dependecise
+      - name: Restore dependencise
         run: dotnet restore
 
       - name: Build app
