@@ -11,6 +11,8 @@ using lagalt_api.Models.DTOs.ProjectUsersDTOs;
 using lagalt_api.Models.Domain;
 using System.Linq;
 using lagalt_api.Models.DTOs.UserDTOs;
+using lagalt_api.Models.DTOs.FieldUserDTOs;
+using lagalt_api.Models.DTOs.SkillUserDTOs;
 
 namespace lagalt_api.Controllers
 {
@@ -101,6 +103,43 @@ namespace lagalt_api.Controllers
             await _context.SaveChangesAsync();
 
             return CreatedAtAction("GetUserById", new { id = user.UserId }, _mapper.Map<UserCreateDTO>(user));
+        }
+
+        [HttpPut("{userId}/field/{fieldId}")]
+        public async Task<ActionResult> AddFieldToUser(string userId, int fieldId, FieldUserCreateDTO fieldUserIds)
+        {
+            User user = _context.Users.Include("Fields").First(u => u.UserId == fieldUserIds.UserId);
+            user.Fields.Add(_context.Fields.Find(fieldUserIds.FieldId));
+            try
+            {
+                await _context.SaveChangesAsync();
+            }
+
+            catch
+            {
+                throw;
+            }
+
+            return CreatedAtAction("AddFieldToUser", fieldUserIds);
+        }
+
+
+        [HttpPut("{userId}/skill/{skillId}")]
+        public async Task<ActionResult> AddSkillToUser(string userId, int skillId, SkillUserCreateDTO skillUserIds)
+        {
+            User user = _context.Users.Include("Skills").First(u => u.UserId == skillUserIds.UserId);
+            user.Skills.Add(_context.Skills.Find(skillUserIds.SkillId));
+            try
+            {
+                await _context.SaveChangesAsync();
+            }
+
+            catch
+            {
+                throw;
+            }
+
+            return CreatedAtAction("AddSkillToUser", skillUserIds);
         }
     }
 }

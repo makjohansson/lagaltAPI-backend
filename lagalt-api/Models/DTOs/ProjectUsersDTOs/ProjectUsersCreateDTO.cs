@@ -9,5 +9,7 @@ namespace lagalt_api.Models.DTOs.ProjectUsersDTOs
     {
         public int ProjectId { get; set; }
         public int UserId { get; set; }
+        public bool Owner { get; set; }
+
     }
 }

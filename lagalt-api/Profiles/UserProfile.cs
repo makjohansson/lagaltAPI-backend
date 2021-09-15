@@ -3,6 +3,8 @@ using lagalt_api.Models.Domain;
 using lagalt_api.Models.DTOs.UserDTOs;
 using lagalt_api.Models.DTOs.ProjectUsersDTOs;
 using System.Linq;
+using lagalt_api.Models.DTOs.SkillUserDTOs;
+using lagalt_api.Models.DTOs.FieldUserDTOs;
 
 namespace lagalt_api.Profiles
 {
@@ -23,6 +25,12 @@ namespace lagalt_api.Profiles
                 .ReverseMap();
 
             CreateMap<User, UserCreateDTO>()
+                .ReverseMap();
+
+            CreateMap<User, SkillUserCreateDTO>()
+                .ReverseMap();
+
+            CreateMap<User, FieldUserCreateDTO>()
                 .ReverseMap();
         }
     }
