@@ -17,6 +17,7 @@ namespace lagalt_api.Data
         public DbSet<Skill> Skills{ get; set; }
         public DbSet<ProjectUser> ProjectUsers { get; set; }
 
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<User>().HasData(SeedUsersHelper.GetUserSeeds());
