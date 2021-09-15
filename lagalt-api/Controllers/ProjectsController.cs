@@ -5,6 +5,7 @@ using lagalt_api.Models.DTOs.FieldProjectDTOs;
 using lagalt_api.Models.DTOs.KeywordProjectCreateDTO;
 using lagalt_api.Models.DTOs.ProjectDTOs;
 using lagalt_api.Models.DTOs.ProjectUsersDTOs;
+using lagalt_api.Models.DTOs.SkillProjectDTOs;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -98,7 +99,7 @@ namespace lagalt_api.Controllers
             return CreatedAtAction("GetProjectById", new { id = project.ProjectId }, _mapper.Map<ProjectCreateDTO>(project));
         }
 
-        [HttpPut("{projectId}/{keywordId}/keywords")]
+        [HttpPut("{projectId}/keyword/{keywordId}")]
         public async Task<ActionResult> AddKeywordToProject(int projectId, int keywordId, KeywordProjectCreateDTO keywordProjectIds)
         {
             Project project = _context.Projects.Include("Keywords").First(p => p.ProjectId == keywordProjectIds.ProjectId);
@@ -116,7 +117,7 @@ namespace lagalt_api.Controllers
             return CreatedAtAction("AddKeywordToProject", keywordProjectIds);
         }
 
-        [HttpPut("{projectId}/{fieldId}/fields")]
+        [HttpPut("{projectId}/field/{fieldId}")]
         public async Task<ActionResult> AddFieldToProject(int projectId, int fieldId, FieldProjectCreateDTO fieldProjectIds)
         {
             Project project = _context.Projects.Include("Fields").First(p => p.ProjectId == fieldProjectIds.ProjectId);
@@ -134,5 +135,22 @@ namespace lagalt_api.Controllers
             return CreatedAtAction("AddFieldToProject", fieldProjectIds);
         }
 
+        [HttpPut("{projectId}/skill/{skillId}")]
+        public async Task<ActionResult> AddSkillToProject(int projectId, int skillId, SkillProjectCreateDTO skillProjectIds)
+        {
+            Project project = _context.Projects.Include("Skills").First(p => p.ProjectId == skillProjectIds.ProjectId);
+            project.Skills.Add(_context.Skills.Find(skillProjectIds.SkillId));
+            try
+            {
+                await _context.SaveChangesAsync();
+            }
+
+            catch
+            {
+                throw;
+            }
+
+            return CreatedAtAction("AddSkillToProject", skillProjectIds);
+        }
     }
 }
