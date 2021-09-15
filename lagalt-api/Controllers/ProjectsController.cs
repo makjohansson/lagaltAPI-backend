@@ -38,9 +38,16 @@ namespace lagalt_api.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<ProjectReadDTO>>> GetAllProjects([FromQuery]ProjectParameters projectParameters)
+        public async Task<ActionResult<ProjectParamReadDTO>> GetAllProjects([FromQuery] ProjectParameters projectParameters)
         {
-            return _mapper.Map<List<ProjectReadDTO>>(await _context.Projects
+
+            var projectParam = new ProjectParamReadDTO
+            {
+                Count = _context.Projects.Count(),
+                PageNumber = projectParameters.PageNumber,
+                PageSize = projectParameters.PageSize,
+                Projects = _mapper
+                .Map<List<ProjectReadDTO>>(await _context.Projects
                 .OrderBy(p => p.ProjectId)
                 .Skip((projectParameters.PageNumber - 1) * projectParameters.PageSize)
                 .Take(projectParameters.PageSize)
@@ -48,19 +55,10 @@ namespace lagalt_api.Controllers
                 .Include(p => p.Fields)
                 .Include(p => p.Keywords)
                 .Include(p => p.Photos)
-                .ToListAsync());
-                
+                .ToListAsync())
+            };
 
-            /*
-            return _mapper.Map<List<ProjectReadDTO>>(await _context.Projects
-                .Include(p => p.Skills)
-                .Include(p => p.Fields)
-                .Include(p => p.ProjectUsers)
-                .Include(p => p.Keywords)
-                .Include(p => p.Photos)
-                .Include(p => p.Messages)
-                .ToListAsync());
-            */
+            return projectParam;
         }
 
         [HttpGet("{id}/project")]
