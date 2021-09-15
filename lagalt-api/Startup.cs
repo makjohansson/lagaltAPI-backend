@@ -42,9 +42,9 @@ namespace lagalt_api
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
             
-                app.UseDeveloperExceptionPage();
-                app.UseSwagger();
-                app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "lagalt_api v1"));
+            app.UseDeveloperExceptionPage();
+            app.UseSwagger();
+            app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "lagalt_api v1"));
             
 
             app.UseHttpsRedirection();
