@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace lagalt_api.Models.DTOs.KeywordDTOs
 {
-    public class KeywordCreateDTO
+    public class KeywordDTO
     {
         public string Tag { get; set; }
     }

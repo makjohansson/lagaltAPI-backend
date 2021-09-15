@@ -12,9 +12,7 @@ namespace lagalt_api.Profiles
     {
         public KeywordProfile()
         {
-            CreateMap<Keyword, KeywordReadDTO>()
-                .ReverseMap();
-            CreateMap<Keyword, KeywordCreateDTO>()
+            CreateMap<Keyword, KeywordDTO>()
                 .ReverseMap();
         }
     }

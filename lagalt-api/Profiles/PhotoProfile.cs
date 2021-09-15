@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
 using lagalt_api.Models.Domain;
-using lagalt_api.Models.DTOs.SkillDTOs;
+using lagalt_api.Models.DTOs.PhotoDTOs;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,12 +8,13 @@ using System.Threading.Tasks;
 
 namespace lagalt_api.Profiles
 {
-    public class SkillProfile : Profile
+    public class PhotoProfile : Profile
     {
-        public SkillProfile()
+        public PhotoProfile()
         {
-            CreateMap<Skill, SkillDTO>()
+            CreateMap<Photo, PhotoDTO>()
                 .ReverseMap();
         }
+        
     }
 }

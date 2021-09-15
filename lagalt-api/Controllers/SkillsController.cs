@@ -12,7 +12,7 @@ using System.Threading.Tasks;
 
 namespace lagalt_api.Controllers
 {
-    [Route("[controller]")]
+    [Route("api/[controller]")]
     [ApiController]
     [Produces(MediaTypeNames.Application.Json)]
     [Consumes(MediaTypeNames.Application.Json)]
@@ -30,7 +30,7 @@ namespace lagalt_api.Controllers
         [HttpGet("{id}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<ActionResult<SkillReadDTO>> GetById(int id)
+        public async Task<ActionResult<SkillDTO>> GetById(int id)
         {
             if (!Exists(id))
             {
@@ -38,27 +38,27 @@ namespace lagalt_api.Controllers
             }
             var skill = await _context.Skills.FirstOrDefaultAsync(f => f.SkillId == id);
 
-            return _mapper.Map<SkillReadDTO>(skill);
+            return _mapper.Map<SkillDTO>(skill);
 
         }
 
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        public async Task<ActionResult<IEnumerable<SkillReadDTO>>> GetAll()
+        public async Task<ActionResult<IEnumerable<SkillDTO>>> GetAll()
         {
-            return _mapper.Map<List<SkillReadDTO>>(await _context.Skills
+            return _mapper.Map<List<SkillDTO>>(await _context.Skills
                 .ToListAsync());
         }
 
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status201Created)]
-        public async Task<ActionResult<Skill>> AddSkill(SkillCreateDTO skillDto)
+        public async Task<ActionResult<Skill>> AddSkill(SkillDTO skillDto)
         {
             Skill skill = _mapper.Map<Skill>(skillDto);
             _context.Skills.Add(skill);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction("GetById", new { id = skill.SkillId }, _mapper.Map<SkillCreateDTO>(skill));
+            return CreatedAtAction("GetById", new { id = skill.SkillId }, _mapper.Map<SkillDTO>(skill));
         }
 
         private bool Exists(int id)

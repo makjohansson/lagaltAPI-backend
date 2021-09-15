@@ -12,7 +12,7 @@ using System.Threading.Tasks;
 
 namespace lagalt_api.Controllers
 {
-    [Route("[controller]")]
+    [Route("api/[controller]")]
     [ApiController]
     [Produces(MediaTypeNames.Application.Json)]
     [Consumes(MediaTypeNames.Application.Json)]
@@ -31,7 +31,7 @@ namespace lagalt_api.Controllers
         [HttpGet("{id}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<ActionResult<FieldReadDTO>> GetById (int id)
+        public async Task<ActionResult<FieldDTO>> GetById (int id)
         {
             if (!Exists(id))
             {
@@ -39,27 +39,27 @@ namespace lagalt_api.Controllers
             }
             var field = await _context.Fields.FirstOrDefaultAsync(f => f.FieldId == id);
 
-            return _mapper.Map<FieldReadDTO>(field);
+            return _mapper.Map<FieldDTO>(field);
 
         }
 
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        public async Task<ActionResult<IEnumerable<FieldReadDTO>>> GetAll ()
+        public async Task<ActionResult<IEnumerable<FieldDTO>>> GetAll ()
         {
-            return _mapper.Map<List<FieldReadDTO>>(await _context.Fields
+            return _mapper.Map<List<FieldDTO>>(await _context.Fields
                 .ToListAsync());
         }
 
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status201Created)]
-        public async Task<ActionResult<Field>> AddField (FieldCreateDTO fieldDto)
+        public async Task<ActionResult<Field>> AddField (FieldDTO fieldDto)
         {
             Field field = _mapper.Map<Field>(fieldDto);
             _context.Fields.Add(field);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction("GetById", new { id = field.FieldId }, _mapper.Map<FieldCreateDTO>(field));
+            return CreatedAtAction("GetById", new { id = field.FieldId }, _mapper.Map<FieldDTO>(field));
         }
 
         private bool Exists(int id)

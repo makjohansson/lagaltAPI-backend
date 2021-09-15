@@ -17,7 +17,7 @@ using System.Threading.Tasks;
 
 namespace lagalt_api.Controllers
 {
-    [Route("projects")]
+    [Route("api/projects")]
     [ApiController]
     [Produces(MediaTypeNames.Application.Json)]
     [Consumes(MediaTypeNames.Application.Json)]

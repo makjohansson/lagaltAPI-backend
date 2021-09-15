@@ -5,9 +5,8 @@ using System.Threading.Tasks;
 
 namespace lagalt_api.Models.DTOs.SkillDTOs
 {
-    public class SkillReadDTO
+    public class SkillDTO
     {
         public string SkillName { get; set; }
-
     }
 }

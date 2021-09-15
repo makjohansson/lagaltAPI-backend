@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using lagalt_api.Data;
+using lagalt_api.Models.Domain;
 using lagalt_api.Models.DTOs.PhotoDTOs;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -12,7 +13,7 @@ using System.Threading.Tasks;
 
 namespace lagalt_api.Controllers
 {
-    [Route("[controller]")]
+    [Route("api/[controller]")]
     [ApiController]
     [Produces(MediaTypeNames.Application.Json)]
     [Consumes(MediaTypeNames.Application.Json)]
@@ -38,8 +39,19 @@ namespace lagalt_api.Controllers
             var photo = await _context.Photos.FirstOrDefaultAsync(p => p.PhotoId == id);
 
             return _mapper.Map<PhotoDTO>(photo);
-
         }
+
+        [HttpPost]
+        [ProducesResponseType(StatusCodes.Status201Created)]
+        public async Task<ActionResult<Photo>> AddPhoto(PhotoDTO photoDto)
+        {
+            Photo photo = _mapper.Map<Photo>(photoDto);
+            _context.Photos.Add(photo);
+            await _context.SaveChangesAsync();
+
+            return CreatedAtAction("GetById", new { id = photo.PhotoId }, _mapper.Map<PhotoDTO>(photo));
+        }
+
         private bool Exists(int id)
         {
             return _context.Photos.Any(p => p.PhotoId == id);

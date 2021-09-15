@@ -12,7 +12,7 @@ using System.Threading.Tasks;
 
 namespace lagalt_api.Controllers
 {
-    [Route("[controller]")]
+    [Route("api/[controller]")]
     [ApiController]
     [Produces(MediaTypeNames.Application.Json)]
     [Consumes(MediaTypeNames.Application.Json)]
@@ -30,16 +30,16 @@ namespace lagalt_api.Controllers
 
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        public async Task<ActionResult<IEnumerable<KeywordReadDTO>>> GetAll()
+        public async Task<ActionResult<IEnumerable<KeywordDTO>>> GetAll()
         {
-            return _mapper.Map<List<KeywordReadDTO>>(await _context.Keywords
+            return _mapper.Map<List<KeywordDTO>>(await _context.Keywords
                 .ToListAsync());
         }
 
         [HttpGet("{id}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<ActionResult<KeywordReadDTO>> GetById(int id)
+        public async Task<ActionResult<KeywordDTO>> GetById(int id)
         {
             if (!Exists(id))
             {
@@ -47,18 +47,18 @@ namespace lagalt_api.Controllers
             }
             var keyword = await _context.Keywords.FirstOrDefaultAsync(k => k.KeywordId == id);
 
-            return _mapper.Map<KeywordReadDTO>(keyword);
+            return _mapper.Map<KeywordDTO>(keyword);
         }
 
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status201Created)]
-        public async Task<ActionResult<Keyword>> AddField(KeywordCreateDTO keywordDto)
+        public async Task<ActionResult<Keyword>> AddField(KeywordDTO keywordDto)
         {
             Keyword keyword = _mapper.Map<Keyword>(keywordDto);
             _context.Keywords.Add(keyword);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction("GetById", new { id = keyword.KeywordId }, _mapper.Map<KeywordCreateDTO>(keyword));
+            return CreatedAtAction("GetById", new { id = keyword.KeywordId }, _mapper.Map<KeywordDTO>(keyword));
         }
 
         private bool Exists(int id)

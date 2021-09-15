@@ -16,7 +16,7 @@ using lagalt_api.Models.DTOs.SkillUserDTOs;
 
 namespace lagalt_api.Controllers
 {
-    [Route("users")]
+    [Route("api/users")]
     [ApiController]
     [Produces(MediaTypeNames.Application.Json)]
     [Consumes(MediaTypeNames.Application.Json)]

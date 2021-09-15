@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace lagalt_api.Models.DTOs.FieldDTOs
 {
-    public class FieldReadDTO
+    public class FieldDTO
     {
         public string FieldName { get; set; }
     }
