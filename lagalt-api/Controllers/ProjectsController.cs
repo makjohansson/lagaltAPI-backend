@@ -6,6 +6,7 @@ using lagalt_api.Models.DTOs.KeywordProjectCreateDTO;
 using lagalt_api.Models.DTOs.ProjectDTOs;
 using lagalt_api.Models.DTOs.ProjectUsersDTOs;
 using lagalt_api.Models.DTOs.SkillProjectDTOs;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -37,8 +38,20 @@ namespace lagalt_api.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<ProjectReadDTO>>> GetAllProjects()
+        public async Task<ActionResult<IEnumerable<ProjectReadDTO>>> GetAllProjects([FromQuery]ProjectParameters projectParameters)
         {
+            return _mapper.Map<List<ProjectReadDTO>>(await _context.Projects
+                .OrderBy(p => p.ProjectId)
+                .Skip((projectParameters.PageNumber - 1) * projectParameters.PageSize)
+                .Take(projectParameters.PageSize)
+                .Include(p => p.Skills)
+                .Include(p => p.Fields)
+                .Include(p => p.Keywords)
+                .Include(p => p.Photos)
+                .ToListAsync());
+                
+
+            /*
             return _mapper.Map<List<ProjectReadDTO>>(await _context.Projects
                 .Include(p => p.Skills)
                 .Include(p => p.Fields)
@@ -47,6 +60,7 @@ namespace lagalt_api.Controllers
                 .Include(p => p.Photos)
                 .Include(p => p.Messages)
                 .ToListAsync());
+            */
         }
 
         [HttpGet("{id}/project")]
@@ -152,5 +166,18 @@ namespace lagalt_api.Controllers
 
             return CreatedAtAction("AddSkillToProject", skillProjectIds);
         }
+
+        [HttpPut("{projectId}/user/{userId}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        public async Task<ActionResult> AddUserToProject(int projectId, string userId, bool owner, ProjectUsersCreateDTO projectUsersIds)
+        {
+            _context.ProjectUsers.Add( new() { ProjectId = projectId, UserId = userId, Owner = owner });
+
+            await _context.SaveChangesAsync();
+
+            return Ok();
+        }
+
+
     }
 }
