@@ -35,9 +35,9 @@ namespace lagalt_api
                 options.AddPolicy(name: MyAllowSpecificOrigins,
                                   builder =>
                                   {
-                                      builder.WithOrigins("https://proud-plant-08714e210.azurestaticapps.net/")
-                                                         .AllowAnyHeader()
-                                                         .AllowAnyMethod();
+                                      builder.AllowAnyOrigin()
+                                             .AllowAnyHeader()
+                                             .AllowAnyMethod();
                                   });
             });
             services.AddControllers();
