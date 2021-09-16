@@ -24,6 +24,8 @@ namespace lagalt_api.Models.Domain
         public ICollection<Project> AppliedProjects { get; set; }
         public ICollection<Project> ClickedProjects { get; set; }
         public ICollection<Project> ContributedProjects { get; set; }
+        public ICollection<ProjectUser> ProjectUsers { get; set; }
+
 
         [MaxLength(1000)]
         public string Description { get; set; }

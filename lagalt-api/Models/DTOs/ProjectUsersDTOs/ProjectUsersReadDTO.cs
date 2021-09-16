@@ -9,6 +9,6 @@ namespace lagalt_api.Models.DTOs.ProjectUsersDTOs
 {
     public class ProjectUsersReadDTO
     {
-        public ICollection<Project> ContributedProjects { get; set; }
+        public ICollection<Project> Projects { get; set; }
     }
 }
