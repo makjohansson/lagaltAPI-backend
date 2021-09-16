@@ -21,7 +21,7 @@ namespace lagalt_api.Profiles
 
             CreateMap<User, ProjectUsersReadDTO>()
                 .ForMember(pudto => pudto.ContributedProjects, opt => opt
-                    .MapFrom(u => u.ContributedProjects.Select(p => p.ProjectName).ToList()))
+                    .MapFrom(u => u.ContributedProjects.ToList()))
                 .ReverseMap();
 
             CreateMap<User, UserCreateDTO>()

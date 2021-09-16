@@ -18,6 +18,7 @@ namespace lagalt_api
 {
     public class Startup
     {
+        readonly string MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
@@ -29,6 +30,16 @@ namespace lagalt_api
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddAutoMapper(typeof(Startup));
+            services.AddCors(options =>
+            {
+                options.AddPolicy(name: MyAllowSpecificOrigins,
+                                  builder =>
+                                  {
+                                      builder.WithOrigins("https://proud-plant-08714e210.azurestaticapps.net/")
+                                                         .AllowAnyHeader()
+                                                         .AllowAnyMethod();
+                                  });
+            });
             services.AddControllers();
             services.AddSwaggerGen(c =>
             {
@@ -50,6 +61,8 @@ namespace lagalt_api
             app.UseHttpsRedirection();
 
             app.UseRouting();
+
+            app.UseCors(MyAllowSpecificOrigins);
 
             app.UseAuthorization();
 

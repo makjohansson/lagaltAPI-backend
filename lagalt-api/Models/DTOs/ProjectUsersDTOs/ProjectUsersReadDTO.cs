@@ -1,4 +1,6 @@
-﻿using System;
+﻿using lagalt_api.Models.Domain;
+using lagalt_api.Models.DTOs.ProjectDTOs;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -7,6 +9,6 @@ namespace lagalt_api.Models.DTOs.ProjectUsersDTOs
 {
     public class ProjectUsersReadDTO
     {
-        public List<string> ContributedProjects { get; set; }
+        public ICollection<Project> ContributedProjects { get; set; }
     }
 }
