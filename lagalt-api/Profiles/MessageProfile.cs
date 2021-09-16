@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using lagalt_api.Models.Domain;
 using lagalt_api.Models.DTOs.MessagesDTOs;
 using System;
 using System.Collections.Generic;
@@ -11,7 +12,9 @@ namespace lagalt_api.Profiles
     {
         public MessageProfile()
         {
-            CreateMap<MessageProfile, MessageCreateDTO>()
+            CreateMap<Message, MessageCreateDTO>()
+                .ReverseMap();
+            CreateMap<Message, MessageReadDTO>()
                 .ReverseMap();
         }
  

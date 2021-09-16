@@ -31,7 +31,7 @@ namespace lagalt_api.Controllers
         [HttpGet("{id}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<ActionResult<MessageCreateDTO>> GetById(int id)
+        public async Task<ActionResult<MessageReadDTO>> GetById(int id)
         {
             if (!Exists(id))
             {
@@ -39,7 +39,7 @@ namespace lagalt_api.Controllers
             }
             var message = await _context.Messages.FirstOrDefaultAsync(m => m.MessageId == id);
 
-            return _mapper.Map<MessageCreateDTO>(message);
+            return _mapper.Map<MessageReadDTO>(message);
         }
 
         [HttpPost]
