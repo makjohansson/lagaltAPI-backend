@@ -30,7 +30,7 @@ namespace lagalt_api.Controllers
         [HttpGet("{id}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<ActionResult<PhotoDTO>> GetById(int id)
+        public async Task<ActionResult<PhotoReadDTO>> GetById(int id)
         {
             if (!Exists(id))
             {
@@ -38,18 +38,18 @@ namespace lagalt_api.Controllers
             }
             var photo = await _context.Photos.FirstOrDefaultAsync(p => p.PhotoId == id);
 
-            return _mapper.Map<PhotoDTO>(photo);
+            return _mapper.Map<PhotoReadDTO>(photo);
         }
 
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status201Created)]
-        public async Task<ActionResult<Photo>> AddPhoto(PhotoDTO photoDto)
+        public async Task<ActionResult<Photo>> AddPhoto(PhotoCreateDTO photoDto)
         {
             Photo photo = _mapper.Map<Photo>(photoDto);
             _context.Photos.Add(photo);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction("GetById", new { id = photo.PhotoId }, _mapper.Map<PhotoDTO>(photo));
+            return CreatedAtAction("GetById", new { id = photo.PhotoId }, _mapper.Map<PhotoCreateDTO>(photo));
         }
 
         private bool Exists(int id)

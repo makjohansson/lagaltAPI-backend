@@ -12,7 +12,9 @@ namespace lagalt_api.Profiles
     {
         public PhotoProfile()
         {
-            CreateMap<Photo, PhotoDTO>()
+            CreateMap<Photo, PhotoReadDTO>()
+                .ReverseMap();
+            CreateMap<Photo, PhotoCreateDTO>()
                 .ReverseMap();
         }
         

@@ -10,7 +10,9 @@ namespace lagalt_api.Profiles
     {
         public FieldProfile()
         {
-            CreateMap<Field, FieldDTO>()
+            CreateMap<Field, FieldCreateDTO>()
+                .ReverseMap();
+            CreateMap<Field, FieldReadDTO>()
                 .ReverseMap();
         }
     }
