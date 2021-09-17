@@ -44,6 +44,8 @@ namespace lagalt_api.Controllers
             return _mapper.Map<List<UserReadDTO>>(await _context.Users
                 .Include(u => u.Skills)
                 .Include(u => u.Fields)
+                .Include(u => u.Portfolios)
+
                 .ToListAsync());
 
         }
@@ -59,6 +61,8 @@ namespace lagalt_api.Controllers
             var user = await _context.Users
                 .Include(u => u.Skills)
                 .Include(u => u.Fields)
+                .Include(u => u.Portfolios)
+
                 .FirstOrDefaultAsync(u => u.UserId == id);
 
             if (user == null)
