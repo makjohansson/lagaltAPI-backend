@@ -93,32 +93,6 @@ namespace lagalt_api.Controllers
             }
 
             return _mapper.Map<ProjectUsersReadDTO>(projectUser);
-            /*
-             * return _mapper.Map<List<ProjectReadDTO>>(await _context.Keywords
-               .Where(k => k.KeywordId == keywordId)
-                .SelectMany(k => k.Projects)
-                .Include(p => p.Skills)
-                .Include(p => p.Fields)
-                .Include(p => p.ProjectUsers)
-                .Include(p => p.Keywords)
-                .Include(p => p.Photos)
-                .Include(p => p.Messages)
-                .ToListAsync()) ;
-             */
-
-            /*
-            User UserObj = await _context.Users
-                .Include(u => u.ContributedProjects)
-                .Where(u => u.UserId == id)
-                .FirstAsync();
-
-            if (UserObj == null)
-            {
-                return NotFound();
-            }
-
-            return _mapper.Map<ProjectUsersReadDTO>(UserObj);
-            */
         }
 
         /// <summary>
