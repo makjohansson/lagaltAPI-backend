@@ -18,7 +18,7 @@ namespace lagalt_api.Profiles
                 .ForMember(udto => udto.Fields, opt => opt
                     .MapFrom(u => u.Fields.Select(f => f.FieldName).ToList()))
                 .ForMember(udto => udto.Portfolios, opt => opt
-                    .MapFrom(u => u.Portfolios.Select(p => p.PortfolioId).ToList()))
+                    .MapFrom(u => u.Portfolios.ToList()))
                 .ReverseMap();
 
             CreateMap<User, ProjectUsersReadDTO>()
