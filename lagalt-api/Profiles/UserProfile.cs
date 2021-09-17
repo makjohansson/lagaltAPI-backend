@@ -5,6 +5,7 @@ using lagalt_api.Models.DTOs.ProjectUsersDTOs;
 using System.Linq;
 using lagalt_api.Models.DTOs.SkillUserDTOs;
 using lagalt_api.Models.DTOs.FieldUserDTOs;
+using System.Collections.Generic;
 
 namespace lagalt_api.Profiles
 {
@@ -18,12 +19,20 @@ namespace lagalt_api.Profiles
                 .ForMember(udto => udto.Fields, opt => opt
                     .MapFrom(u => u.Fields.Select(f => f.FieldName).ToList()))
                 .ReverseMap();
-
+            /*
             CreateMap<User, ProjectUsersReadDTO>()
-                .ForMember(pudto => pudto.Projects, opt => opt
-                    .MapFrom(u => u.ProjectUsers.ToList()))
+                .ForMember(pudto => pudto.ContributedProjects, opt => opt
+                    .MapFrom(u => u.ContributedProjects.Select(p => p.ProjectName).ToList()))
                 .ReverseMap();
-
+            
+            
+            CreateMap<IEnumerable<ProjectUser>, ProjectUsersReadDTO>()
+                .ForMember(pudto => pudto.Projects, opt => opt
+                    .MapFrom(p => p.Select(p => p.Projects)
+                    .ToList()))
+                .ReverseMap();
+            
+            */
             CreateMap<User, UserCreateDTO>()
                 .ReverseMap();
 

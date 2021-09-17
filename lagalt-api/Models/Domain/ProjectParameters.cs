@@ -16,6 +16,5 @@ namespace lagalt_api.Models.Domain
             set { _pageSize = (value > maxPageSize) ? maxPageSize : value; }
         }
 
-        
     }
 }

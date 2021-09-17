@@ -76,45 +76,29 @@ namespace lagalt_api.Controllers
         /// <param name="id">User Id</param>
         /// <returns></returns>
         [HttpGet("projects/{id}")]
-        public async Task<ActionResult<ProjectUsersReadDTO>> GetProjectsByUserId(string id)
+        public async Task<ActionResult<IEnumerable<ProjectReadDTO>>> GetProjectsByUserId(string id)
         {
-            var projectUser = await _context.Users
-                .Include(u => u.ContributedProjects)
-                .Where(u => u.UserId == id)
-                .FirstAsync();
+            var projectIdList = await _context.ProjectUsers
+                .Where(pu => pu.UserId == id)
+                .Select(pu => pu.ProjectId).ToListAsync();
 
-            if (projectUser == null)
+            List<ProjectReadDTO> projectList = new List<ProjectReadDTO>();
+
+            foreach (int projectId in projectIdList)
             {
-                return NotFound();
-            }
-
-            return _mapper.Map<ProjectUsersReadDTO>(projectUser);
-            /*
-             * return _mapper.Map<List<ProjectReadDTO>>(await _context.Keywords
-               .Where(k => k.KeywordId == keywordId)
-                .SelectMany(k => k.Projects)
+                var project = _mapper.Map<ProjectReadDTO>(await _context.Projects
                 .Include(p => p.Skills)
                 .Include(p => p.Fields)
                 .Include(p => p.ProjectUsers)
                 .Include(p => p.Keywords)
                 .Include(p => p.Photos)
                 .Include(p => p.Messages)
-                .ToListAsync()) ;
-             */
+                .FirstOrDefaultAsync(p => p.ProjectId == projectId));
 
-            /*
-            User UserObj = await _context.Users
-                .Include(u => u.ContributedProjects)
-                .Where(u => u.UserId == id)
-                .FirstAsync();
-
-            if (UserObj == null)
-            {
-                return NotFound();
+                projectList.Add(project);
             }
 
-            return _mapper.Map<ProjectUsersReadDTO>(UserObj);
-            */
+            return projectList;
         }
 
         /// <summary>
