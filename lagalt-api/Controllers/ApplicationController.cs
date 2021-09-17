@@ -43,8 +43,6 @@ namespace lagalt_api.Controllers
             return _mapper.Map<ApplicationReadDTO>(application);
         }
 
-
-
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status201Created)]
         public async Task<ActionResult<Application>> AddPortfolio(ApplicationCreateDTO applicationDto)
@@ -54,6 +52,24 @@ namespace lagalt_api.Controllers
             await _context.SaveChangesAsync();
 
             return CreatedAtAction("GetById", new { id = application.ApplicationId }, _mapper.Map<ApplicationCreateDTO>(application));
+        }
+
+        [HttpPut]
+        [ProducesResponseType(StatusCodes.Status201Created)]
+        public async Task<ActionResult> ApproveApplication(ApplicationEditDTO applicationDto)
+        {
+            Application application = await _context.Applications.Where(a => (a.UserId == applicationDto.UserId) && (a.ProjectId == applicationDto.ProjectId)).FirstOrDefaultAsync();
+            if (application == null)
+            {
+                return NotFound();
+            }
+
+            application.Approved = true;
+            application.ApprovedByOwnerId = applicationDto.ApprovedByOwnerId;
+
+            await _context.SaveChangesAsync();
+
+            return NoContent();
         }
 
 

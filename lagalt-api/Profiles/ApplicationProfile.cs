@@ -16,6 +16,8 @@ namespace lagalt_api.Profiles
                 .ReverseMap();
             CreateMap<Application, ApplicationCreateDTO>()
                 .ReverseMap();
+            CreateMap<Application, ApplicationEditDTO>()
+                .ReverseMap();
 
 
         }

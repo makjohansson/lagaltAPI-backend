@@ -14,6 +14,7 @@ using lagalt_api.Models.DTOs.UserDTOs;
 using lagalt_api.Models.DTOs.FieldUserDTOs;
 using lagalt_api.Models.DTOs.SkillUserDTOs;
 using lagalt_api.Models.DTOs.ProjectDTOs;
+using lagalt_api.Models.DTOs.ApplicationDTOs;
 
 namespace lagalt_api.Controllers
 {
@@ -103,6 +104,15 @@ namespace lagalt_api.Controllers
             }
 
             return projectList;
+        }
+
+        [HttpGet("{userId}/applications")]
+        public async Task<ActionResult<IEnumerable<ApplicationReadDTO>>> GetApplicationsByUserId(string userId)
+        {
+            return _mapper.Map<List<ApplicationReadDTO>>(await _context.Users
+               .Where(p => p.UserId == userId)
+                .SelectMany(p => p.Applications)
+                .ToListAsync());
         }
 
         /// <summary>

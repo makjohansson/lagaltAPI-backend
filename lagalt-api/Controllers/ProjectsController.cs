@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using lagalt_api.Data;
 using lagalt_api.Models.Domain;
+using lagalt_api.Models.DTOs.ApplicationDTOs;
 using lagalt_api.Models.DTOs.FieldProjectDTOs;
 using lagalt_api.Models.DTOs.KeywordProjectCreateDTO;
 using lagalt_api.Models.DTOs.MessagesDTOs;
@@ -105,6 +106,15 @@ namespace lagalt_api.Controllers
             return _mapper.Map<List<MessageReadDTO>>(await _context.Projects
                .Where(p => p.ProjectId == projectId)
                 .SelectMany(p => p.Messages)
+                .ToListAsync());
+        }
+
+        [HttpGet("{projectId}/applications")]
+        public async Task<ActionResult<IEnumerable<ApplicationReadDTO>>> GetApplicationsByProjectId(int projectId)
+        {
+            return _mapper.Map<List<ApplicationReadDTO>>(await _context.Projects
+               .Where(p => p.ProjectId == projectId)
+                .SelectMany(p => p.Applications)
                 .ToListAsync());
         }
 

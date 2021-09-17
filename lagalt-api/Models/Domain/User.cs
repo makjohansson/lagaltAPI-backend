@@ -30,6 +30,8 @@ namespace lagalt_api.Models.Domain
         [MaxLength(1000)]
         public string Description { get; set; }
         public ICollection<Portfolio> Portfolios { get; set; }
+        public ICollection<Application> Applications { get; set; }
+
 
 
     }
