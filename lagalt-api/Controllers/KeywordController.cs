@@ -52,7 +52,7 @@ namespace lagalt_api.Controllers
 
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status201Created)]
-        public async Task<ActionResult<Keyword>> AddField(KeywordCreateDTO keywordDto)
+        public async Task<ActionResult<Keyword>> AddKeyword(KeywordCreateDTO keywordDto)
         {
             Keyword keyword = _mapper.Map<Keyword>(keywordDto);
             _context.Keywords.Add(keyword);

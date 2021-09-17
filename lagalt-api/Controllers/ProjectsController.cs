@@ -3,6 +3,7 @@ using lagalt_api.Data;
 using lagalt_api.Models.Domain;
 using lagalt_api.Models.DTOs.FieldProjectDTOs;
 using lagalt_api.Models.DTOs.KeywordProjectCreateDTO;
+using lagalt_api.Models.DTOs.MessagesDTOs;
 using lagalt_api.Models.DTOs.ProjectDTOs;
 using lagalt_api.Models.DTOs.ProjectUsersDTOs;
 using lagalt_api.Models.DTOs.SkillProjectDTOs;
@@ -96,6 +97,18 @@ namespace lagalt_api.Controllers
                 .Include(p => p.Messages)
                 .ToListAsync()) ;
         }
+
+        [HttpGet("{projectId}/messages")]
+        public async Task<ActionResult<IEnumerable<MessageReadDTO>>> GetMessagesByProjectId(int projectId)
+        {
+
+            return _mapper.Map<List<MessageReadDTO>>(await _context.Projects
+               .Where(p => p.ProjectId == projectId)
+                .SelectMany(p => p.Messages)
+                .ToListAsync());
+        }
+
+
         /// <summary>
         /// Adds a new project to the database
         /// </summary>
