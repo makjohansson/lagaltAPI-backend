@@ -1,4 +1,5 @@
 ﻿using lagalt_api.Models.Domain;
+using lagalt_api.Models.DTOs.PortfolioDTOs;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,5 +16,7 @@ namespace lagalt_api.Models.DTOs.UserDTOs
         public bool Hidden { get; set; }
         public List<string> Skills { get; set; }
         public List<string> Fields { get; set; }
+        public ICollection<PortfolioReadDTO> Portfolios { get; set; }
+
     }
 }

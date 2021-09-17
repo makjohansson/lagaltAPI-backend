@@ -16,6 +16,8 @@ namespace lagalt_api.Data
         public DbSet<Project> Projects  { get; set; }
         public DbSet<Skill> Skills{ get; set; }
         public DbSet<ProjectUser> ProjectUsers { get; set; }
+        public DbSet<Portfolio> Portfolios { get; set; }
+
 
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
