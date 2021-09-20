@@ -47,6 +47,7 @@ namespace lagalt_api.Controllers
         public async Task<ActionResult<Message>> AddMessage(MessageCreateDTO messageDto)
         {
             Message message = _mapper.Map<Message>(messageDto);
+            messageDto.TimeStamp = DateTime.UtcNow;
             _context.Messages.Add(message);
             await _context.SaveChangesAsync();
 

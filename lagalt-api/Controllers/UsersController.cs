@@ -6,8 +6,6 @@ using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using lagalt_api.Data;
-using lagalt_api.Models.DTOs;
-using lagalt_api.Models.DTOs.ProjectUsersDTOs;
 using lagalt_api.Models.Domain;
 using System.Linq;
 using lagalt_api.Models.DTOs.UserDTOs;

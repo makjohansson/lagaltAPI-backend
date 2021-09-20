@@ -11,7 +11,6 @@ using lagalt_api.Models.DTOs.SkillProjectDTOs;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Mime;
@@ -84,11 +83,12 @@ namespace lagalt_api.Controllers
 
 
         [HttpGet("{keywordId}/keyword")]
-        public async Task<ActionResult<IEnumerable<ProjectReadDTO>>> GetProjectsByKeywords(int keywordId)
+        public async Task<ActionResult<IEnumerable<ProjectReadDTO>>> GetProjectsByKeywords()
         {
 
             return _mapper.Map<List<ProjectReadDTO>>(await _context.Keywords
-               .Where(k => k.KeywordId == keywordId)
+               .Where(k => k.KeywordId == 1)
+               .Where(k => k.KeywordId == 2)
                 .SelectMany(k => k.Projects)
                 .Include(p => p.Skills)
                 .Include(p => p.Fields)

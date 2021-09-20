@@ -1,5 +1,6 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace lagalt_api.Models.Domain
 {
@@ -12,7 +13,6 @@ namespace lagalt_api.Models.Domain
         [Required]
         [MaxLength(4000)]
         public string Text { get; set; }
-
         public DateTime TimeStamp { get; set; }
     }
 }
