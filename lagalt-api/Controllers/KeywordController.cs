@@ -9,6 +9,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net.Mime;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 
 namespace lagalt_api.Controllers
 {
@@ -28,6 +29,7 @@ namespace lagalt_api.Controllers
             _mapper = mapper;
         }
 
+        //[Authorize]
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK)]
         public async Task<ActionResult<IEnumerable<KeywordReadDTO>>> GetAll()

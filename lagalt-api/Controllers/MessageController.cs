@@ -28,6 +28,7 @@ namespace lagalt_api.Controllers
             _mapper = mapper;
         }
 
+
         [HttpGet("{id}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
