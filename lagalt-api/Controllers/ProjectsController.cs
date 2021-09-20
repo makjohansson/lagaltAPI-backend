@@ -87,15 +87,15 @@ namespace lagalt_api.Controllers
         {
 
             return _mapper.Map<List<ProjectReadDTO>>(await _context.Keywords
-               .Where(k => k.KeywordId == 1)
-               .Where(k => k.KeywordId == 2)
+               .Where(k => (k.KeywordId == 1) || (k.KeywordId == 2))
                 .SelectMany(k => k.Projects)
                 .Include(p => p.Skills)
                 .Include(p => p.Fields)
                 .Include(p => p.ProjectUsers)
                 .Include(p => p.Keywords)
                 .Include(p => p.Photos)
-                .Include(p => p.Messages)
+                .Include(p => p.Messages)                  
+                .Distinct()
                 .ToListAsync()) ;
         }
 
