@@ -13,6 +13,10 @@ using System.Linq;
 using System.Threading.Tasks;
 using lagalt_api.Data;
 using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json;
+using Microsoft.IdentityModel.Tokens;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using System.Net.Http;
 
 namespace lagalt_api
 {
@@ -26,9 +30,36 @@ namespace lagalt_api
 
         public IConfiguration Configuration { get; }
 
-        // This method gets called by the runtime. Use this method to add services to the container.
+
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+           .AddJwtBearer(options =>
+           {
+               options.TokenValidationParameters = new TokenValidationParameters
+               {
+                   
+                   IssuerSigningKeyResolver = (token, securityToken, kid, parameters) =>
+                   {
+                       var client = new HttpClient();
+                       var keyuri = Configuration["TokenSecrets:KeyURI"];
+                       var response = client.GetAsync(keyuri).Result;
+                       var responseString = response.Content.ReadAsStringAsync().Result;
+                       var keys = JsonConvert.DeserializeObject<JsonWebKeySet>(responseString);
+                       return keys.Keys;
+                   },
+
+                   ValidIssuers = new List<string>
+                   {
+                         Configuration["TokenSecrets:IssuerURI"]
+                   },
+
+                   ValidAudience = "account",
+               };
+           });
+
+
+
             services.AddAutoMapper(typeof(Startup));
             services.AddCors(options =>
             {
@@ -61,9 +92,7 @@ namespace lagalt_api
             app.UseHttpsRedirection();
 
             app.UseRouting();
-
-            app.UseCors(MyAllowSpecificOrigins);
-
+            app.UseAuthentication();
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
