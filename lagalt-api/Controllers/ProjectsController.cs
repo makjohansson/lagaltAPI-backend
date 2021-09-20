@@ -11,6 +11,7 @@ using lagalt_api.Models.DTOs.SkillProjectDTOs;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Mime;
@@ -83,20 +84,26 @@ namespace lagalt_api.Controllers
 
 
         [HttpGet("{keywordId}/keyword")]
-        public async Task<ActionResult<IEnumerable<ProjectReadDTO>>> GetProjectsByKeywords()
+        public async Task<ActionResult<IEnumerable<ProjectReadDTO>>> GetProjectsByKeywords(string keywords, string fields)
         {
 
-            return _mapper.Map<List<ProjectReadDTO>>(await _context.Keywords
-               .Where(k => (k.KeywordId == 1) || (k.KeywordId == 2))
+            var idArray = Array.ConvertAll(keywords.Split(","), int.Parse);
+
+            var projectList = _mapper.Map<List<ProjectReadDTO>>(await _context.Keywords
+               .Where(k => idArray.Contains(k.KeywordId))
                 .SelectMany(k => k.Projects)
                 .Include(p => p.Skills)
                 .Include(p => p.Fields)
                 .Include(p => p.ProjectUsers)
                 .Include(p => p.Keywords)
                 .Include(p => p.Photos)
-                .Include(p => p.Messages)                  
-                .Distinct()
-                .ToListAsync()) ;
+                .Include(p => p.Messages)  
+                .ToListAsync());
+
+            var distinctProjectList = projectList.GroupBy(p => p.ProjectId).Select(p => p.First()).ToList();
+
+
+            return distinctProjectList;
         }
 
         [HttpGet("{projectId}/messages")]
