@@ -21,6 +21,8 @@ namespace lagalt_api.Profiles
                     .MapFrom(u => u.Photos.Select(p => p.PhotoUrl).ToList()))
                 .ForMember(pdto => pdto.Keywords, opt => opt
                     .MapFrom(u => u.Keywords.Select(k => k.Tag).ToList()))
+                .ForMember(pdto => pdto.ProjectUsers, opt => opt
+                .MapFrom(u => u.ProjectUsers.Select(u => new { u.UserId, u.Owner }).ToList()))
                 .ReverseMap();
 
             CreateMap<Project, KeywordProjectCreateDTO>()
