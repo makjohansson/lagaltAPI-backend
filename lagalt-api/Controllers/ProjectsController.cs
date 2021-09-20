@@ -199,6 +199,26 @@ namespace lagalt_api.Controllers
             return Ok();
         }
 
+        [HttpDelete("{id}")]
+        public async Task<ActionResult> Delete(int id)
+        {
+            Project project = await _context.Projects.FindAsync(id);
+
+            if (!Exists(id))
+            {
+                return NotFound();
+            }
+            _context.Projects.Remove(project);
+            await _context.SaveChangesAsync();
+
+            return NoContent();
+        }
+
+        private bool Exists(int id)
+        {
+            return _context.Projects.Any(p => p.ProjectId == id);
+        }
+
 
     }
 }

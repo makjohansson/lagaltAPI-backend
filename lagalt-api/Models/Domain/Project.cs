@@ -12,7 +12,10 @@ namespace lagalt_api.Models.Domain
         [Required]
         [MaxLength(50)]
         public string ProjectName { get; set; }
-        //Description?
+
+        [MaxLength(2000)]
+        public string Description { get; set; }
+        public string UrlReference { get; set; }
         public ICollection<ProjectUser> ProjectUsers { get; set; }
         public ICollection<Skill> Skills { get; set; }
         public ICollection<Field> Fields { get; set; }

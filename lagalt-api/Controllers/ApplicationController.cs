@@ -53,7 +53,7 @@ namespace lagalt_api.Controllers
 
             return CreatedAtAction("GetById", new { id = application.ApplicationId }, _mapper.Map<ApplicationCreateDTO>(application));
         }
-
+        
         [HttpPut]
         [ProducesResponseType(StatusCodes.Status201Created)]
         public async Task<ActionResult> ApproveApplication(ApplicationEditDTO applicationDto)
@@ -67,6 +67,21 @@ namespace lagalt_api.Controllers
             application.Approved = true;
             application.ApprovedByOwnerId = applicationDto.ApprovedByOwnerId;
 
+            await _context.SaveChangesAsync();
+
+            return NoContent();
+        }
+        
+        [HttpDelete("{id}")]
+        public async Task<ActionResult> DenyApplication(int id)
+        {
+            Application application = await _context.Applications.FindAsync(id);
+
+            if (!Exists(id))
+            {
+                return NotFound();
+            }
+            _context.Applications.Remove(application);
             await _context.SaveChangesAsync();
 
             return NoContent();

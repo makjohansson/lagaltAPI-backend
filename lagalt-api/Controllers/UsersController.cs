@@ -166,5 +166,25 @@ namespace lagalt_api.Controllers
 
             return CreatedAtAction("AddSkillToUser", skillUserIds);
         }
+
+        [HttpDelete("{id}")]
+        public async Task<ActionResult> Delete(string id)
+        {
+            User user = await _context.Users.FindAsync(id);
+
+            if (!Exists(id))
+            {
+                return NotFound();
+            }
+            _context.Users.Remove(user);
+            await _context.SaveChangesAsync();
+
+            return NoContent();
+        }
+
+        private bool Exists(string id)
+        {
+            return _context.Users.Any(u => u.UserId == id);
+        }
     }
 }

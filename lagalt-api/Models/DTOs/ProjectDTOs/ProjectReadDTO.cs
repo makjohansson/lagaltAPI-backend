@@ -11,6 +11,8 @@ namespace lagalt_api.Models.DTOs.ProjectDTOs
     {
         public int ProjectId { get; set; }
         public string ProjectName { get; set; }
+        public string Description { get; set; }
+        public string UrlReference { get; set; }
         public ICollection<string> Skills { get; set; }
         public ICollection<string> Fields { get; set; }
         public ICollection<string> Keywords { get; set; }

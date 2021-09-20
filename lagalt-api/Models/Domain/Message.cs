@@ -12,6 +12,7 @@ namespace lagalt_api.Models.Domain
         [Required]
         [MaxLength(4000)]
         public string Text { get; set; }
+
         public DateTime TimeStamp { get; set; }
     }
 }
