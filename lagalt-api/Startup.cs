@@ -61,6 +61,7 @@ namespace lagalt_api
 
 
             services.AddAutoMapper(typeof(Startup));
+            
             services.AddCors(options =>
             {
                 options.AddPolicy(name: MyAllowSpecificOrigins,
@@ -90,6 +91,7 @@ namespace lagalt_api
             
 
             app.UseHttpsRedirection();
+            app.UseCors(MyAllowSpecificOrigins);
 
             app.UseRouting();
             app.UseAuthentication();
