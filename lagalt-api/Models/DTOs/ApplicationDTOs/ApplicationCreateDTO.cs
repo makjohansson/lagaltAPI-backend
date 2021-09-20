@@ -12,6 +12,6 @@ namespace lagalt_api.Models.DTOs.ApplicationDTOs
         public string Motivation { get; set; }
         public DateTime Timestamp { get; set; }
         public bool Approved { get; set; }
-        public int ApprovedByOwnerId { get; set; }
+        public string ApprovedByOwnerId { get; set; }
     }
 }

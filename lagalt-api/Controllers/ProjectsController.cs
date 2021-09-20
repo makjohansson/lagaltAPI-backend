@@ -11,7 +11,6 @@ using lagalt_api.Models.DTOs.SkillProjectDTOs;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Mime;
@@ -84,11 +83,12 @@ namespace lagalt_api.Controllers
 
 
         [HttpGet("{keywordId}/keyword")]
-        public async Task<ActionResult<IEnumerable<ProjectReadDTO>>> GetProjectsByKeywords(int keywordId)
+        public async Task<ActionResult<IEnumerable<ProjectReadDTO>>> GetProjectsByKeywords()
         {
 
             return _mapper.Map<List<ProjectReadDTO>>(await _context.Keywords
-               .Where(k => k.KeywordId == keywordId)
+               .Where(k => k.KeywordId == 1)
+               .Where(k => k.KeywordId == 2)
                 .SelectMany(k => k.Projects)
                 .Include(p => p.Skills)
                 .Include(p => p.Fields)
@@ -125,11 +125,16 @@ namespace lagalt_api.Controllers
         /// <param name="projectDto"></param>
         /// <returns></returns>
         [HttpPost]
-        public async Task<ActionResult<User>> AddProject(ProjectCreateDTO projectDto)
+        public async Task<ActionResult<User>> AddProject(string userId, ProjectCreateDTO projectDto)
         {
             Project project = _mapper.Map<Project>(projectDto);
             _context.Projects.Add(project);
+
             await _context.SaveChangesAsync();
+            await AddUserToProject(project.ProjectId, userId, true);
+
+
+
 
             return CreatedAtAction("GetProjectById", new { id = project.ProjectId }, _mapper.Map<ProjectCreateDTO>(project));
         }
@@ -190,13 +195,33 @@ namespace lagalt_api.Controllers
 
         [HttpPut("{projectId}/user/{userId}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        public async Task<ActionResult> AddUserToProject(int projectId, string userId, bool owner, ProjectUsersCreateDTO projectUsersIds)
+        public async Task<ActionResult> AddUserToProject(int projectId, string userId, bool owner)
         {
             _context.ProjectUsers.Add( new() { ProjectId = projectId, UserId = userId, Owner = owner });
 
             await _context.SaveChangesAsync();
 
             return Ok();
+        }
+
+        [HttpDelete("{id}")]
+        public async Task<ActionResult> Delete(int id)
+        {
+            Project project = await _context.Projects.FindAsync(id);
+
+            if (!Exists(id))
+            {
+                return NotFound();
+            }
+            _context.Projects.Remove(project);
+            await _context.SaveChangesAsync();
+
+            return NoContent();
+        }
+
+        private bool Exists(int id)
+        {
+            return _context.Projects.Any(p => p.ProjectId == id);
         }
 
 

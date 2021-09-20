@@ -6,8 +6,6 @@ using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using lagalt_api.Data;
-using lagalt_api.Models.DTOs;
-using lagalt_api.Models.DTOs.ProjectUsersDTOs;
 using lagalt_api.Models.Domain;
 using System.Linq;
 using lagalt_api.Models.DTOs.UserDTOs;
@@ -165,6 +163,26 @@ namespace lagalt_api.Controllers
             }
 
             return CreatedAtAction("AddSkillToUser", skillUserIds);
+        }
+
+        [HttpDelete("{id}")]
+        public async Task<ActionResult> Delete(string id)
+        {
+            User user = await _context.Users.FindAsync(id);
+
+            if (!Exists(id))
+            {
+                return NotFound();
+            }
+            _context.Users.Remove(user);
+            await _context.SaveChangesAsync();
+
+            return NoContent();
+        }
+
+        private bool Exists(string id)
+        {
+            return _context.Users.Any(u => u.UserId == id);
         }
     }
 }
