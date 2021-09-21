@@ -27,7 +27,6 @@ namespace lagalt_api.Controllers
             _mapper = mapper;
         }
 
-
         /// <summary>
         /// Get a specific application by id
         /// </summary>
@@ -47,7 +46,6 @@ namespace lagalt_api.Controllers
             return _mapper.Map<ApplicationReadDTO>(application);
         }
 
-
         /// <summary>
         /// Create an application
         /// </summary>
@@ -62,8 +60,7 @@ namespace lagalt_api.Controllers
             await _context.SaveChangesAsync();
 
             return CreatedAtAction("GetById", new { id = application.ApplicationId }, _mapper.Map<ApplicationCreateDTO>(application));
-        }
-        
+        }  
 
         /// <summary>
         /// Approve an application
@@ -71,7 +68,7 @@ namespace lagalt_api.Controllers
         /// <param name="applicationId">application id</param>
         /// <param name="ownerId">owner id</param>
         /// <returns></returns>
-        [HttpPut]
+        [HttpPut("approve")]
         [ProducesResponseType(StatusCodes.Status201Created)]
         public async Task<ActionResult> ApproveApplication(int applicationId, string ownerId)
         {
@@ -94,7 +91,7 @@ namespace lagalt_api.Controllers
         /// </summary>
         /// <param name="applicationId">application id</param>
         /// <returns></returns>
-        [HttpDelete("{id}")]
+        [HttpPut("deny")]
         public async Task<ActionResult> DenyApplication(int applicationId)
         {
             Application application = await _context.Applications.Where(a => a.ApplicationId == applicationId).FirstOrDefaultAsync();
@@ -110,7 +107,6 @@ namespace lagalt_api.Controllers
             return NoContent();
         }
 
-
         /// <summary>
         /// Check if a specific application exists
         /// </summary>
@@ -120,6 +116,5 @@ namespace lagalt_api.Controllers
         {
             return _context.Applications.Any(a => a.ApplicationId == id);
         }
-
     }
 }

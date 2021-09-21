@@ -5,8 +5,6 @@ using lagalt_api.Models.DTOs.PhotoDTOs;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Net.Mime;
 using System.Threading.Tasks;
@@ -27,6 +25,12 @@ namespace lagalt_api.Controllers
             _context = context;
             _mapper = mapper;
         }
+
+        /// <summary>
+        /// Get a specific photo by id
+        /// </summary>
+        /// <param name="id">photo id</param>
+        /// <returns></returns>
         [HttpGet("{id}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -41,9 +45,14 @@ namespace lagalt_api.Controllers
             return _mapper.Map<PhotoReadDTO>(photo);
         }
 
+        /// <summary>
+        /// Create a photo
+        /// </summary>
+        /// <param name="photoDto">data for the new photo</param>
+        /// <returns>The created photo</returns>
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status201Created)]
-        public async Task<ActionResult<Photo>> AddPhoto(PhotoCreateDTO photoDto)
+        public async Task<ActionResult<Photo>> Add(PhotoCreateDTO photoDto)
         {
             Photo photo = _mapper.Map<Photo>(photoDto);
             _context.Photos.Add(photo);
@@ -52,6 +61,11 @@ namespace lagalt_api.Controllers
             return CreatedAtAction("GetById", new { id = photo.PhotoId }, _mapper.Map<PhotoCreateDTO>(photo));
         }
 
+        /// <summary>
+        /// Check if a specific photo exists
+        /// </summary>
+        /// <param name="id">photo id</param>
+        /// <returns></returns>
         private bool Exists(int id)
         {
             return _context.Photos.Any(p => p.PhotoId == id);

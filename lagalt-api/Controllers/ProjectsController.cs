@@ -6,7 +6,6 @@ using lagalt_api.Models.DTOs.FieldProjectDTOs;
 using lagalt_api.Models.DTOs.KeywordProjectCreateDTO;
 using lagalt_api.Models.DTOs.MessagesDTOs;
 using lagalt_api.Models.DTOs.ProjectDTOs;
-using lagalt_api.Models.DTOs.ProjectUsersDTOs;
 using lagalt_api.Models.DTOs.SkillProjectDTOs;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -36,13 +35,13 @@ namespace lagalt_api.Controllers
         }
 
         /// <summary>
-        /// Gets all projects
+        /// Get all projects
         /// </summary>
+        /// <param name="projectParameters">parameters to get a specific number of projects per page, and the number of the page</param>
         /// <returns></returns>
         [HttpGet]
-        public async Task<ActionResult<ProjectParamReadDTO>> GetAllProjects([FromQuery] ProjectParameters projectParameters)
+        public async Task<ActionResult<ProjectParamReadDTO>> GetAll([FromQuery] ProjectParameters projectParameters)
         {
-
             var projectParam = new ProjectParamReadDTO
             {
                 Count = _context.Projects.Count(),
@@ -63,8 +62,13 @@ namespace lagalt_api.Controllers
             return projectParam;
         }
 
+        /// <summary>
+        /// Get a specific project by id
+        /// </summary>
+        /// <param name="id">project id</param>
+        /// <returns></returns>
         [HttpGet("{id}/project")]
-        public async Task<ActionResult<ProjectReadDTO>> GetProjectById(int id)
+        public async Task<ActionResult<ProjectReadDTO>> GetById(int id)
         {
             var project = await _context.Projects
                 .Include(p => p.Skills)
@@ -82,13 +86,16 @@ namespace lagalt_api.Controllers
             return _mapper.Map<ProjectReadDTO>(project);
         }
 
-
+        /// <summary>
+        /// Get all projects that include the specific field and keywords
+        /// </summary>
+        /// <param name="keywords">string of keyword ids, seperated with ","</param>
+        /// <param name="field">field name</param>
+        /// <returns></returns>
         [HttpGet("keywords/field")]
-        public async Task<ActionResult<IEnumerable<ProjectReadDTO>>> GetProjectsByKeywords(string keywords, string fields)
+        public async Task<ActionResult<IEnumerable<ProjectReadDTO>>> GetProjectsByKeywordsAndField(string keywords, string field)
         {
-
             var idArray = Array.ConvertAll(keywords.Split(","), int.Parse);
-
 
             var projectList = _mapper.Map<List<ProjectReadDTO>>(await _context.Keywords
                .Where(k => idArray.Contains(k.KeywordId))
@@ -101,25 +108,32 @@ namespace lagalt_api.Controllers
                 .Include(p => p.Messages)  
                 .ToListAsync());
 
-            var test = projectList.FindAll(p => p.Fields.Contains(fields));
+            var test = projectList.FindAll(p => p.Fields.Contains(field));
             
-
             var distinctProjectList = test.GroupBy(p => p.ProjectId).Select(p => p.First()).ToList();
-
 
             return distinctProjectList;
         }
 
+        /// <summary>
+        /// Get all messages from a specific project
+        /// </summary>
+        /// <param name="projectId">project id</param>
+        /// <returns></returns>
         [HttpGet("{projectId}/messages")]
         public async Task<ActionResult<IEnumerable<MessageReadDTO>>> GetMessagesByProjectId(int projectId)
         {
-
             return _mapper.Map<List<MessageReadDTO>>(await _context.Projects
                .Where(p => p.ProjectId == projectId)
                 .SelectMany(p => p.Messages)
                 .ToListAsync());
         }
 
+        /// <summary>
+        /// Get all applications from a specific project
+        /// </summary>
+        /// <param name="projectId">project id</param>
+        /// <returns></returns>
         [HttpGet("{projectId}/applications")]
         public async Task<ActionResult<IEnumerable<ApplicationReadDTO>>> GetApplicationsByProjectId(int projectId)
         {
@@ -130,12 +144,13 @@ namespace lagalt_api.Controllers
         } 
 
         /// <summary>
-        /// Adds a new project to the database
+        /// Create a project
         /// </summary>
-        /// <param name="projectDto"></param>
+        /// <param name="userId">id of the user that creates the project</param>
+        /// <param name="projectDto">data for the new application</param>
         /// <returns></returns>
         [HttpPost]
-        public async Task<ActionResult<User>> AddProject(string userId, ProjectCreateDTO projectDto)
+        public async Task<ActionResult<User>> Add(string userId, ProjectCreateDTO projectDto)
         {
             Project project = _mapper.Map<Project>(projectDto);
             _context.Projects.Add(project);
@@ -146,11 +161,16 @@ namespace lagalt_api.Controllers
             return CreatedAtAction("GetProjectById", new { id = project.ProjectId }, _mapper.Map<ProjectCreateDTO>(project));
         }
 
+        /// <summary>
+        /// Edit a project
+        /// </summary>
+        /// <param name="projectId">project id</param>
+        /// <param name="projectDTO">data to change for the project</param>
+        /// <returns></returns>
         [HttpPut]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
-        public async Task<ActionResult> EditProject(int projectId, ProjectEditDTO projectDTO)
+        public async Task<ActionResult> Edit(int projectId, ProjectEditDTO projectDTO)
         {
-
             Project project = _context.Projects.Find(projectId);
             if(project == null)
             {
@@ -166,11 +186,15 @@ namespace lagalt_api.Controllers
             return NoContent();
         }
 
+        /// <summary>
+        /// Close a project
+        /// </summary>
+        /// <param name="projectId">project id</param>
+        /// <returns></returns>
         [HttpPut("close")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         public async Task<ActionResult> CloseProject(int projectId)
         {
-
             Project project = _context.Projects.Find(projectId);
             if (project == null)
             {
@@ -184,6 +208,11 @@ namespace lagalt_api.Controllers
             return NoContent();
         }
 
+        /// <summary>
+        /// Add a keyword to a project
+        /// </summary>
+        /// <param name="keywordProjectIds">keyword id and project id</param>
+        /// <returns></returns>
         [HttpPut("keyword")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         public async Task<ActionResult> AddKeywordToProject(KeywordProjectCreateDTO keywordProjectIds)
@@ -203,6 +232,11 @@ namespace lagalt_api.Controllers
             return NoContent();
         }
 
+        /// <summary>
+        /// Add a field to a project
+        /// </summary>
+        /// <param name="fieldProjectIds">field id and project id</param>
+        /// <returns></returns>
         [HttpPut("field")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         public async Task<ActionResult> AddFieldToProject(FieldProjectCreateDTO fieldProjectIds)
@@ -222,6 +256,11 @@ namespace lagalt_api.Controllers
             return NoContent();
         }
 
+        /// <summary>
+        /// Add a skill to a project
+        /// </summary>
+        /// <param name="skillProjectIds">skill id and project id</param>
+        /// <returns></returns>
         [HttpPut("skill")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         public async Task<ActionResult> AddSkillToProject(SkillProjectCreateDTO skillProjectIds)
@@ -241,6 +280,13 @@ namespace lagalt_api.Controllers
             return NoContent();
         }
 
+        /// <summary>
+        /// Add a user to a project
+        /// </summary>
+        /// <param name="projectId">project id</param>
+        /// <param name="userId">user id</param>
+        /// <param name="owner">boolean</param>
+        /// <returns></returns>
         [HttpPut("{projectId}/user/{userId}")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         public async Task<ActionResult> AddUserToProject(int projectId, string userId, bool owner)
@@ -252,6 +298,11 @@ namespace lagalt_api.Controllers
             return NoContent();
         }
 
+        /// <summary>
+        /// Delete a project
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         [HttpDelete("{id}")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         public async Task<ActionResult> Delete(int id)
@@ -268,11 +319,14 @@ namespace lagalt_api.Controllers
             return NoContent();
         }
 
+        /// <summary>
+        /// Check if a specific project exists
+        /// </summary>
+        /// <param name="id">project id</param>
+        /// <returns></returns>
         private bool Exists(int id)
         {
             return _context.Projects.Any(p => p.ProjectId == id);
         }
-
-
     }
 }

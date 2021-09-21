@@ -6,7 +6,6 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Net.Mime;
 using System.Threading.Tasks;
@@ -28,7 +27,11 @@ namespace lagalt_api.Controllers
             _mapper = mapper;
         }
 
-
+        /// <summary>
+        /// Get a specific message by id
+        /// </summary>
+        /// <param name="id">message id</param>
+        /// <returns></returns>
         [HttpGet("{id}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -43,9 +46,14 @@ namespace lagalt_api.Controllers
             return _mapper.Map<MessageReadDTO>(message);
         }
 
+        /// <summary>
+        /// Create a message
+        /// </summary>
+        /// <param name="messageDto">data for the new message</param>
+        /// <returns>the created message</returns>
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status201Created)]
-        public async Task<ActionResult<Message>> AddMessage(MessageCreateDTO messageDto)
+        public async Task<ActionResult<Message>> Add(MessageCreateDTO messageDto)
         {
             Message message = _mapper.Map<Message>(messageDto);
             message.TimeStamp = DateTime.UtcNow;
@@ -55,6 +63,11 @@ namespace lagalt_api.Controllers
             return CreatedAtAction("GetById", new { id = message.MessageId }, _mapper.Map<MessageCreateDTO>(message));
         }
 
+        /// <summary>
+        /// Check if a specific message exists
+        /// </summary>
+        /// <param name="id">message id</param>
+        /// <returns></returns>
         private bool Exists(int id)
         {
             return _context.Messages.Any(m => m.MessageId == id);
