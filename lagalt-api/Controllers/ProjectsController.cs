@@ -83,11 +83,12 @@ namespace lagalt_api.Controllers
         }
 
 
-        [HttpGet("{keywordId}/keyword")]
+        [HttpGet("keywords/field")]
         public async Task<ActionResult<IEnumerable<ProjectReadDTO>>> GetProjectsByKeywords(string keywords, string fields)
         {
 
             var idArray = Array.ConvertAll(keywords.Split(","), int.Parse);
+
 
             var projectList = _mapper.Map<List<ProjectReadDTO>>(await _context.Keywords
                .Where(k => idArray.Contains(k.KeywordId))
@@ -100,7 +101,10 @@ namespace lagalt_api.Controllers
                 .Include(p => p.Messages)  
                 .ToListAsync());
 
-            var distinctProjectList = projectList.GroupBy(p => p.ProjectId).Select(p => p.First()).ToList();
+            var test = projectList.FindAll(p => p.Fields.Contains(fields));
+            
+
+            var distinctProjectList = test.GroupBy(p => p.ProjectId).Select(p => p.First()).ToList();
 
 
             return distinctProjectList;
@@ -146,8 +150,9 @@ namespace lagalt_api.Controllers
             return CreatedAtAction("GetProjectById", new { id = project.ProjectId }, _mapper.Map<ProjectCreateDTO>(project));
         }
 
-        [HttpPut("{projectId}/keyword/{keywordId}")]
-        public async Task<ActionResult> AddKeywordToProject(int projectId, int keywordId, KeywordProjectCreateDTO keywordProjectIds)
+        [HttpPut("keyword")]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        public async Task<ActionResult> AddKeywordToProject(KeywordProjectCreateDTO keywordProjectIds)
         {
             Project project = _context.Projects.Include("Keywords").First(p => p.ProjectId == keywordProjectIds.ProjectId);
             project.Keywords.Add(_context.Keywords.Find(keywordProjectIds.KeywordId));
@@ -161,11 +166,12 @@ namespace lagalt_api.Controllers
                 throw;
             }
 
-            return CreatedAtAction("AddKeywordToProject", keywordProjectIds);
+            return NoContent();
         }
 
-        [HttpPut("{projectId}/field/{fieldId}")]
-        public async Task<ActionResult> AddFieldToProject(int projectId, int fieldId, FieldProjectCreateDTO fieldProjectIds)
+        [HttpPut("field")]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        public async Task<ActionResult> AddFieldToProject(FieldProjectCreateDTO fieldProjectIds)
         {
             Project project = _context.Projects.Include("Fields").First(p => p.ProjectId == fieldProjectIds.ProjectId);
             project.Fields.Add(_context.Fields.Find(fieldProjectIds.FieldId));
@@ -179,11 +185,12 @@ namespace lagalt_api.Controllers
                 throw;
             }
 
-            return CreatedAtAction("AddFieldToProject", fieldProjectIds);
+            return NoContent();
         }
 
-        [HttpPut("{projectId}/skill/{skillId}")]
-        public async Task<ActionResult> AddSkillToProject(int projectId, int skillId, SkillProjectCreateDTO skillProjectIds)
+        [HttpPut("skill")]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        public async Task<ActionResult> AddSkillToProject(SkillProjectCreateDTO skillProjectIds)
         {
             Project project = _context.Projects.Include("Skills").First(p => p.ProjectId == skillProjectIds.ProjectId);
             project.Skills.Add(_context.Skills.Find(skillProjectIds.SkillId));
@@ -197,21 +204,22 @@ namespace lagalt_api.Controllers
                 throw;
             }
 
-            return CreatedAtAction("AddSkillToProject", skillProjectIds);
+            return NoContent();
         }
 
         [HttpPut("{projectId}/user/{userId}")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
         public async Task<ActionResult> AddUserToProject(int projectId, string userId, bool owner)
         {
             _context.ProjectUsers.Add( new() { ProjectId = projectId, UserId = userId, Owner = owner });
 
             await _context.SaveChangesAsync();
 
-            return Ok();
+            return NoContent();
         }
 
         [HttpDelete("{id}")]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
         public async Task<ActionResult> Delete(int id)
         {
             Project project = await _context.Projects.FindAsync(id);
