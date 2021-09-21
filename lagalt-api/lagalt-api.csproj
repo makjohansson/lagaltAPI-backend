@@ -4,6 +4,8 @@
     <TargetFramework>net5.0</TargetFramework>
     <RootNamespace>lagalt_api</RootNamespace>
     <UserSecretsId>7a42f8fd-93cb-4e25-83ad-6b2c5f7b37e7</UserSecretsId>
+	 <GenerateDocumentationFile>true</GenerateDocumentationFile>
+	 <NoWarn>$(NoWarn);1591</NoWarn>
   </PropertyGroup>
 
   <ItemGroup>

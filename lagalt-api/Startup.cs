@@ -17,6 +17,8 @@ using Newtonsoft.Json;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using System.Net.Http;
+using System.Reflection;
+using System.IO;
 
 namespace lagalt_api
 {
@@ -76,6 +78,10 @@ namespace lagalt_api
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "Lagalt API", Version = "v1" });
+
+                var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
+                var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
+                c.IncludeXmlComments(xmlPath);
             });
             services.AddDbContext<LagaltDbContext>(option =>
                 option.UseSqlServer(Configuration.GetConnectionString("DefultConnection")));

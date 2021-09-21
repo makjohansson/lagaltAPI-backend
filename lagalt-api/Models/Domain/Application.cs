@@ -12,7 +12,7 @@ namespace lagalt_api.Models.Domain
         [MaxLength(4000)]
         public string Motivation { get; set; }
         public DateTime Timestamp { get; set; }
-        public bool Approved { get; set; }
+        public bool? Approved { get; set; }
         public string ApprovedByOwnerId { get; set; }
     }
 }
