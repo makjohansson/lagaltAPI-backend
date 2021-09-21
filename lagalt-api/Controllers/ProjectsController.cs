@@ -150,6 +150,26 @@ namespace lagalt_api.Controllers
             return CreatedAtAction("GetProjectById", new { id = project.ProjectId }, _mapper.Map<ProjectCreateDTO>(project));
         }
 
+        [HttpPut]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        public async Task<ActionResult> EditProject(int projectID, ProjectEditDTO projectDTO)
+        {
+
+            Project project = _context.Projects.Find(projectID);
+            if(project == null)
+            {
+                return NotFound($"No project with id {projectID} was found");
+            }
+
+            project.ProjectName = projectDTO.ProjectName;
+            project.Description = projectDTO.Description;
+            project.UrlReference = projectDTO.UrlReference;
+            project.Progress = projectDTO.Progress;
+
+            await _context.SaveChangesAsync();
+            return NoContent();
+        }
+
         [HttpPut("keyword")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         public async Task<ActionResult> AddKeywordToProject(KeywordProjectCreateDTO keywordProjectIds)

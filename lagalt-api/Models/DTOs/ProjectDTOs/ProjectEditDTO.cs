@@ -1,14 +1,12 @@
-﻿using System;
+﻿using lagalt_api.Models.Domain.Enums;
 
 namespace lagalt_api.Models.DTOs.ProjectDTOs
 {
-    public class ProjectCreateDTO
+    public class ProjectEditDTO
     {
         public string ProjectName { get; set; }
         public string Description { get; set; }
         public string UrlReference { get; set; }
-        public DateTime Created { get; set; }
-
+        public ProgressStatus Progress { get; set; }
     }
 }
-

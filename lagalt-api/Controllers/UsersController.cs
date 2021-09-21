@@ -128,6 +128,25 @@ namespace lagalt_api.Controllers
             return CreatedAtAction("GetUserById", new { id = user.UserId }, _mapper.Map<UserCreateDTO>(user));
         }
 
+        [HttpPut]
+        public async Task<ActionResult> EditUser(string userId, UserEditDTO userDTO)
+        {
+            User user = _context.Users.Find(userId);
+            if(user == null)
+            {
+                return NotFound($"No user with id {userId} was found");
+            }
+
+            user.UserName = userDTO.UserName;
+            user.Hidden = userDTO.Hidden;
+            user.ProfilePhoto = userDTO.ProfilePhoto;
+            user.Description = userDTO.Description;
+
+            await _context.SaveChangesAsync();
+
+            return NoContent();
+        }
+
         [HttpPut("{userId}/field/{fieldId}")]
         public async Task<ActionResult> AddFieldToUser(string userId, int fieldId, FieldUserCreateDTO fieldUserIds)
         {

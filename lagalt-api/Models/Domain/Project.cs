@@ -29,7 +29,7 @@ namespace lagalt_api.Models.Domain
         public ICollection<User> ContributedByUsers { get; set; }
         public ProgressStatus Progress { get; set; }
         public DateTime Created { get; set; }
-        public DateTime Closed { get; set; }
+        public DateTime? Closed { get; set; }
 
     }
 }
