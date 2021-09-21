@@ -127,8 +127,7 @@ namespace lagalt_api.Controllers
                .Where(p => p.ProjectId == projectId)
                 .SelectMany(p => p.Applications)
                 .ToListAsync());
-        }
-
+        } 
 
         /// <summary>
         /// Adds a new project to the database
@@ -144,27 +143,42 @@ namespace lagalt_api.Controllers
             await _context.SaveChangesAsync();
             await AddUserToProject(project.ProjectId, userId, true);
 
-
-
-
             return CreatedAtAction("GetProjectById", new { id = project.ProjectId }, _mapper.Map<ProjectCreateDTO>(project));
         }
 
         [HttpPut]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
-        public async Task<ActionResult> EditProject(int projectID, ProjectEditDTO projectDTO)
+        public async Task<ActionResult> EditProject(int projectId, ProjectEditDTO projectDTO)
         {
 
-            Project project = _context.Projects.Find(projectID);
+            Project project = _context.Projects.Find(projectId);
             if(project == null)
             {
-                return NotFound($"No project with id {projectID} was found");
+                return NotFound($"No project with id {projectId} was found");
             }
 
             project.ProjectName = projectDTO.ProjectName;
             project.Description = projectDTO.Description;
             project.UrlReference = projectDTO.UrlReference;
             project.Progress = projectDTO.Progress;
+
+            await _context.SaveChangesAsync();
+            return NoContent();
+        }
+
+        [HttpPut("close")]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        public async Task<ActionResult> CloseProject(int projectId)
+        {
+
+            Project project = _context.Projects.Find(projectId);
+            if (project == null)
+            {
+                return NotFound($"No project with id {projectId} was found");
+            }
+
+            project.Progress = Models.Domain.Enums.ProgressStatus.Completed;
+            project.Closed = DateTime.UtcNow;
 
             await _context.SaveChangesAsync();
             return NoContent();
