@@ -1,9 +1,5 @@
-﻿using lagalt_api.Models.Domain;
-using lagalt_api.Models.DTOs.PortfolioDTOs;
-using System;
+﻿using lagalt_api.Models.DTOs.PortfolioDTOs;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace lagalt_api.Models.DTOs.UserDTOs
 {

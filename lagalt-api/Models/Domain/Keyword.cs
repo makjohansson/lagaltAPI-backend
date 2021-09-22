@@ -10,6 +10,5 @@ namespace lagalt_api.Models.Domain
         [MaxLength(70)]
         public string Tag { get; set;  }
         public ICollection<Project> Projects { get; set; }
-
     }
 }

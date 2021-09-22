@@ -30,6 +30,5 @@ namespace lagalt_api.Models.Domain
         public ProgressStatus Progress { get; set; }
         public DateTime Created { get; set; }
         public DateTime? Closed { get; set; }
-
     }
 }

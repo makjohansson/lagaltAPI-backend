@@ -30,7 +30,6 @@ namespace lagalt_api.Controllers
         {
             _context = context;
             _mapper = mapper;
-
         }
 
         /// <summary>
@@ -44,15 +43,13 @@ namespace lagalt_api.Controllers
                 .Include(u => u.Skills)
                 .Include(u => u.Fields)
                 .Include(u => u.Portfolios)
-
                 .ToListAsync());
-
         }
 
         /// <summary>
         /// Get a specific user by id
         /// </summary>
-        /// <param name="id">User Id</param>
+        /// <param name="id">user Id</param>
         /// <returns></returns>
         [HttpGet("{id}")]
         public async Task<ActionResult<UserReadDTO>> GetUserById(string id)
@@ -61,7 +58,6 @@ namespace lagalt_api.Controllers
                 .Include(u => u.Skills)
                 .Include(u => u.Fields)
                 .Include(u => u.Portfolios)
-
                 .FirstOrDefaultAsync(u => u.UserId == id);
 
             if (user == null)
@@ -70,13 +66,12 @@ namespace lagalt_api.Controllers
             }
 
             return _mapper.Map<UserReadDTO>(user);
-
         }
 
         /// <summary>
-        /// Gets all projects from a specific user
+        /// Get all projects from a specific user
         /// </summary>
-        /// <param name="id">User Id</param>
+        /// <param name="id">user id</param>
         /// <returns></returns>
         [HttpGet("projects/{id}")]
         public async Task<ActionResult<IEnumerable<ProjectReadDTO>>> GetProjectsByUserId(string id)
@@ -104,6 +99,11 @@ namespace lagalt_api.Controllers
             return projectList;
         }
 
+        /// <summary>
+        /// Get all applications from a specific user
+        /// </summary>
+        /// <param name="userId">user id</param>
+        /// <returns></returns>
         [HttpGet("{userId}/applications")]
         public async Task<ActionResult<IEnumerable<ApplicationReadDTO>>> GetApplicationsByUserId(string userId)
         {
@@ -114,10 +114,10 @@ namespace lagalt_api.Controllers
         }
 
         /// <summary>
-        /// Add user to the databas
+        /// Create a user
         /// </summary>
-        /// <param name="userDto">data for the user</param>
-        /// <returns></returns>
+        /// <param name="userDto">data for the new user</param>
+        /// <returns>the created user</returns>
         [HttpPost]
         public async Task<ActionResult<User>> AddUser(UserCreateDTO userDto)
         {
@@ -128,6 +128,12 @@ namespace lagalt_api.Controllers
             return CreatedAtAction("GetUserById", new { id = user.UserId }, _mapper.Map<UserCreateDTO>(user));
         }
 
+        /// <summary>
+        /// Edit a specific user
+        /// </summary>
+        /// <param name="userId">user id</param>
+        /// <param name="userDTO">data that should be added for the user</param>
+        /// <returns></returns>
         [HttpPut]
         public async Task<ActionResult> EditUser(string userId, UserEditDTO userDTO)
         {
@@ -147,8 +153,13 @@ namespace lagalt_api.Controllers
             return NoContent();
         }
 
+        /// <summary>
+        /// Add a specific field to specific user
+        /// </summary>
+        /// <param name="fieldUserIds">field id and user id</param>
+        /// <returns></returns>
         [HttpPut("{userId}/field/{fieldId}")]
-        public async Task<ActionResult> AddFieldToUser(string userId, int fieldId, FieldUserCreateDTO fieldUserIds)
+        public async Task<ActionResult> AddFieldToUser(FieldUserCreateDTO fieldUserIds)
         {
             User user = _context.Users.Include("Fields").First(u => u.UserId == fieldUserIds.UserId);
             user.Fields.Add(_context.Fields.Find(fieldUserIds.FieldId));
@@ -165,9 +176,13 @@ namespace lagalt_api.Controllers
             return CreatedAtAction("AddFieldToUser", fieldUserIds);
         }
 
-
+        /// <summary>
+        /// Add a specific skill to specific user
+        /// </summary>
+        /// <param name="skillUserIds"></param>
+        /// <returns></returns>
         [HttpPut("{userId}/skill/{skillId}")]
-        public async Task<ActionResult> AddSkillToUser(string userId, int skillId, SkillUserCreateDTO skillUserIds)
+        public async Task<ActionResult> AddSkillToUser(SkillUserCreateDTO skillUserIds)
         {
             User user = _context.Users.Include("Skills").First(u => u.UserId == skillUserIds.UserId);
             user.Skills.Add(_context.Skills.Find(skillUserIds.SkillId));
@@ -184,6 +199,11 @@ namespace lagalt_api.Controllers
             return CreatedAtAction("AddSkillToUser", skillUserIds);
         }
 
+        /// <summary>
+        /// Delete a specific user
+        /// </summary>
+        /// <param name="id">user id</param>
+        /// <returns></returns>
         [HttpDelete("{id}")]
         public async Task<ActionResult> Delete(string id)
         {
@@ -199,6 +219,11 @@ namespace lagalt_api.Controllers
             return NoContent();
         }
 
+        /// <summary>
+        /// Check if a specific user exists
+        /// </summary>
+        /// <param name="id">user id</param>
+        /// <returns></returns>
         private bool Exists(string id)
         {
             return _context.Users.Any(u => u.UserId == id);

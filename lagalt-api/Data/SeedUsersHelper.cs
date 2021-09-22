@@ -43,7 +43,6 @@ namespace lagalt_api.Data
             return seedUsers;
         }
 
-
         public static ICollection<Photo> GetPhotoSeeds()
         {
             List<Photo> seedPhotos = new List<Photo>()
