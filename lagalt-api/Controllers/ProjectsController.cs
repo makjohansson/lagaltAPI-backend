@@ -150,7 +150,7 @@ namespace lagalt_api.Controllers
         /// <param name="projectDto">data for the new application</param>
         /// <returns></returns>
         [HttpPost]
-        public async Task<ActionResult<User>> Add(string userId, ProjectCreateDTO projectDto)
+        public async Task<ActionResult<Project>> Add(string userId, ProjectCreateDTO projectDto)
         {
             Project project = _mapper.Map<Project>(projectDto);
             _context.Projects.Add(project);
@@ -158,7 +158,7 @@ namespace lagalt_api.Controllers
             await _context.SaveChangesAsync();
             await AddUserToProject(project.ProjectId, userId, true);
 
-            return CreatedAtAction("GetProjectById", new { id = project.ProjectId }, _mapper.Map<ProjectCreateDTO>(project));
+            return CreatedAtAction("GetById", new { id = project.ProjectId }, _mapper.Map<ProjectReadDTO>(project));
         }
 
         /// <summary>

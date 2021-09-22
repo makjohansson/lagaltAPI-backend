@@ -91,17 +91,16 @@ namespace lagalt_api.Controllers
         /// </summary>
         /// <param name="applicationId">application id</param>
         /// <returns></returns>
-        [HttpPut("deny")]
+        [HttpDelete]
         public async Task<ActionResult> DenyApplication(int applicationId)
         {
-            Application application = await _context.Applications.Where(a => a.ApplicationId == applicationId).FirstOrDefaultAsync();
-            if (application == null)
+            Application application = await _context.Applications.FindAsync(applicationId);
+
+            if (!Exists(applicationId))
             {
                 return NotFound();
             }
-
-            application.Approved = false;
-
+            _context.Applications.Remove(application);
             await _context.SaveChangesAsync();
 
             return NoContent();
