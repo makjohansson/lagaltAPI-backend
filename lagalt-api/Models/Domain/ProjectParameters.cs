@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-
+﻿
 namespace lagalt_api.Models.Domain
 {
     public class ProjectParameters
@@ -15,6 +11,5 @@ namespace lagalt_api.Models.Domain
             get { return _pageSize;  }
             set { _pageSize = (value > maxPageSize) ? maxPageSize : value; }
         }
-
     }
 }

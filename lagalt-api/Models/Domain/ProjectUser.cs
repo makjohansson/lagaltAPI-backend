@@ -1,5 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
-
+﻿
 namespace lagalt_api.Models.Domain
 {
     public class ProjectUser

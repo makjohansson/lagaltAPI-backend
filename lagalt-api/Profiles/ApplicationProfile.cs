@@ -1,10 +1,6 @@
 ﻿using AutoMapper;
 using lagalt_api.Models.Domain;
 using lagalt_api.Models.DTOs.ApplicationDTOs;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace lagalt_api.Profiles
 {
@@ -18,8 +14,6 @@ namespace lagalt_api.Profiles
                 .ReverseMap();
             CreateMap<Application, ApplicationEditDTO>()
                 .ReverseMap();
-
-
         }
     }
 }

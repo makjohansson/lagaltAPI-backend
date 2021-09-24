@@ -5,8 +5,6 @@ using lagalt_api.Models.DTOs.PortfolioDTOs;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Net.Mime;
 using System.Threading.Tasks;
@@ -29,6 +27,11 @@ namespace lagalt_api.Controllers
             _mapper = mapper;
         }
 
+        /// <summary>
+        /// Get a specific portfolio by id
+        /// </summary>
+        /// <param name="id">portfolio id</param>
+        /// <returns></returns>
         [HttpGet("{id}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -43,9 +46,14 @@ namespace lagalt_api.Controllers
             return _mapper.Map<PortfolioReadDTO>(portfolio);
         }
 
+        /// <summary>
+        /// Create a portfolio
+        /// </summary>
+        /// <param name="portfolioDto">data for the new portfolio</param>
+        /// <returns></returns>
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status201Created)]
-        public async Task<ActionResult<Portfolio>> AddPortfolio(PortfolioCreateDTO portfolioDto)
+        public async Task<ActionResult<Portfolio>> Add(PortfolioCreateDTO portfolioDto)
         {
             Portfolio portfolio = _mapper.Map<Portfolio>(portfolioDto);
             _context.Portfolios.Add(portfolio);
@@ -54,6 +62,11 @@ namespace lagalt_api.Controllers
             return CreatedAtAction("GetById", new { id = portfolio.PortfolioId }, _mapper.Map<PortfolioCreateDTO>(portfolio));
         }
 
+        /// <summary>
+        /// Check if a specific portfolio exists
+        /// </summary>
+        /// <param name="id">portfolio id</param>
+        /// <returns></returns>
         private bool Exists(int id)
         {
             return _context.Portfolios.Any(p => p.PortfolioId == id);

@@ -18,8 +18,6 @@ namespace lagalt_api.Data
         public DbSet<ProjectUser> ProjectUsers { get; set; }
         public DbSet<Portfolio> Portfolios { get; set; }
 
-
-
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<User>().HasData(SeedUsersHelper.GetUserSeeds());

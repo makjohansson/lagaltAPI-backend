@@ -27,6 +27,11 @@ namespace lagalt_api.Controllers
             _mapper = mapper;
         }
 
+        /// <summary>
+        /// Get a specific skill by id
+        /// </summary>
+        /// <param name="id">skill id</param>
+        /// <returns></returns>
         [HttpGet("{id}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -39,9 +44,12 @@ namespace lagalt_api.Controllers
             var skill = await _context.Skills.FirstOrDefaultAsync(f => f.SkillId == id);
 
             return _mapper.Map<SkillReadDTO>(skill);
-
         }
 
+        /// <summary>
+        /// Get all skills
+        /// </summary>
+        /// <returns></returns>
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK)]
         public async Task<ActionResult<IEnumerable<SkillReadDTO>>> GetAll()
@@ -50,9 +58,14 @@ namespace lagalt_api.Controllers
                 .ToListAsync());
         }
 
+        /// <summary>
+        /// Create a skill
+        /// </summary>
+        /// <param name="skillDto">data for the new skill</param>
+        /// <returns>the created skill</returns>
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status201Created)]
-        public async Task<ActionResult<Skill>> AddSkill(SkillCreateDTO skillDto)
+        public async Task<ActionResult<Skill>> Add(SkillCreateDTO skillDto)
         {
             Skill skill = _mapper.Map<Skill>(skillDto);
             _context.Skills.Add(skill);
@@ -61,6 +74,11 @@ namespace lagalt_api.Controllers
             return CreatedAtAction("GetById", new { id = skill.SkillId }, _mapper.Map<SkillCreateDTO>(skill));
         }
 
+        /// <summary>
+        /// Check if a specific skill exists
+        /// </summary>
+        /// <param name="id">skill id</param>
+        /// <returns></returns>
         private bool Exists(int id)
         {
             return _context.Skills.Any(s => s.SkillId == id);
